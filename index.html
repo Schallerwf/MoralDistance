@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Moral Distance</title>
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="container" style="width:100%;text-align: center;">
+        <div id="inner" style="width:60%;margin: 0 auto;">
+            <div style="padding-top:20px;"></div>
+            <h1 id="premise" style="padding:20px;text-align: left;">
+                Taylor is going to die in <span id="countdownSeconds">30</span> seconds.<br />You can save Taylor by pressing this button.<br />Taylor is doing to die unless you press this button before time runs out.
+            </h1>
+            <h1 id="outOfTime" style="color:red;"></h1>
+            <h2 id="constraintsText" style="text-align: left;color:green;">
+            <h2 id="constraints" style="text-align: left;">
+            </h2>
+            <a href="#" onclick="pressButton();return false"><img src="img/button.png"></a>
+        </div>
+    </div>
+    <script>
+        var seconds = 30;
+        var paused = false;
+        var iteration = 0;
+        function tick() {
+            if (!paused) {
+                if (seconds > -1) {
+                    document.getElementById("countdownSeconds").innerHTML = seconds;
+                    if (seconds <= 10) {
+                        document.getElementById("countdownSeconds").style.color = "red";
+                    } else if (seconds <= 15) {
+                        document.getElementById("countdownSeconds").style.color = "orange";
+                    } else {
+                        document.getElementById("countdownSeconds").style.color = "black";
+                    }
+                    seconds -= 1;
+                } else if (seconds == -1) {
+                    document.getElementById("outOfTime").innerHTML = "Taylor is dead.";
+                }
+            }
+        }
+
+        function next() {
+            seconds = 30;
+            var constraints = [];
+
+            if (constraintMode == ADD_IN_ORDER) {
+                constraints = addInOrder(CONSTRAINTS);
+            }
+            document.getElementById('constraintsText').innerHTML = 'You saved Taylor. Now, the situation is repeated but with the following changes;';
+            document.getElementById('constraints').innerHTML = '';
+            document.getElementById('constraints').appendChild(makeUL(constraints));
+        }
+
+        function addInOrder(array) {
+            var results = [];
+            for (var ndx = 0; ndx < iteration && ndx < CONSTRAINTS.length; ndx++) {
+                results.push(array[ndx]);
+            }
+            return results;
+        }
+
+        var constraintsSoFar = [];
+        function addRandom() {
+            var results = [];
+            if (constraintsSoFar.length < CONSTRAINTS.length) {
+                var randomNdx = Math.floor(Math.random() * CONSTRAINTS.length);
+                while (constraintsSoFar.includes(randomNdx)) {
+                    randomNdx = Math.floor(Math.random() * CONSTRAINTS.length);
+                }
+                constraintsSoFar.push(randomNdx);
+            }
+
+            return addInOrder(constraintsSoFar);
+        }
+
+
+        function pressButton() {
+            if (seconds == -1) {
+                alert("It is too late to press the button. Taylor is dead.");
+            } else if (seconds > 29) {
+                alert("Are you sure you read the premise? Make sure you understand the situation and think deeply before chosing to press the button.");
+            } else {
+                iteration += 1;
+                next();
+            }
+        }
+
+        const interval = setInterval(function() {
+            tick();
+        }, 1000);
+
+        
+        const RANDOM = "random";
+        const ADD_IN_ORDER = "add_in_order";
+        const ADD_RANDOM = "add_random"; 
+        var constraintMode = ADD_IN_ORDER;
+        const CONSTRAINTS = [
+        "The button is 10 feet away. You must move closer to press it.",
+        "The button costs 1 quarter to press. You must pay 1 quarter to press it.",
+        "The button requires you to provide your full name verbally in order to press it.",
+        "The button will provide you a minor electric shock when you press it.",
+        "The button is up a flight of stairs. You must get up the stairs to press it.",
+        "The button is behind a door. You must pay 100 dollars to get through the door.",
+        "The button is in a secure facility. You must put on a biohazard suit to enter the facility.",
+        "The button is radio active. There is a 10% chance you will experience flu like symptoms if you press it.",
+        "The button will kill a bunny rabbit if pressed.",
+        "The button is protected by a security guard. You must pay $10,000 USD to the guard to get to the button.",
+        "The button will emit radiation which will make 10 people, including you, extremely sick.",
+        "By pressing the button, you are breaking a rule which will require paying a fine of $100,000 USD.",
+        "Pressing the button will only save Taylor for 5 minutes.",
+        "Pressing the button will result in Alex's death.",
+        ];
+
+        var suspectedDeterrent = [
+        "Someone is closer to the button but they will not press it.",
+        "No one will know why Taylor died.",
+        ];
+
+        var suspectedMotivators = [
+        "You are being filmed.",
+        "Your decision will be published in a public record.",
+        "You know Taylor personally."
+        ];
+
+
+        function makeUL(array) {
+            var list = document.createElement('ul');
+            for (var i = 0; i < array.length; i++) {
+                var item = document.createElement('li');
+                item.appendChild(document.createTextNode(array[i]));
+                list.appendChild(item);
+            }
+            return list;
+        }
+
+    </script>
+</body>
+</html>
