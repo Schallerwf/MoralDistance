@@ -5,18 +5,18 @@
     <title>Moral Distance</title>
     <link href="style.css" rel="stylesheet" />
 </head>
-<body>
+<body style="background:#f8f8ff;  transition: background .5s;">
     <div id="container" style="width:100%;text-align: center;">
         <div id="inner" style="width:60%;margin: 0 auto;">
             <div style="padding-top:20px;"></div>
-            <h1 id="premise" style="padding:20px;text-align: left;">
-                Taylor is going to die in <span id="countdownSeconds">30</span> seconds.<br />You can save Taylor by pressing this button.<br />Taylor is going to die unless you press this button before time runs out.
+            <h1 id="premise" style="padding:20px;text-align: left;background-color: black;color:white;">
+                Taylor is going to die in <span id="countdownSeconds" style="color:yellow;">30</span> seconds.<br />You can save Taylor by pressing this button.<br />Taylor is going to die unless you press this button before time runs out.
             </h1>
             <h1 id="outOfTime" style="color:red;"></h1>
             <h2 id="constraintsText" style="text-align: left;color:green;">
             <h2 id="constraints" style="text-align: left;">
             </h2>
-            <a href="#" onclick="pressButton();return false"><img src="img/button.png"></a>
+            <a href="#" onclick="pressButton();return false"><img id="button" src="img/button.png"></a>
         </div>
     </div>
     <script>
@@ -32,11 +32,14 @@
                     } else if (seconds <= 15) {
                         document.getElementById("countdownSeconds").style.color = "orange";
                     } else {
-                        document.getElementById("countdownSeconds").style.color = "black";
+                        document.getElementById("countdownSeconds").style.color = "yellow";
                     }
                     seconds -= 1;
                 } else if (seconds == -1) {
                     document.getElementById("outOfTime").innerHTML = "Taylor is dead.";
+                    document.getElementById('constraintsText').innerHTML = "";
+                    document.querySelector('body').style.background = "#181818";
+                    document.querySelector('p').style.color = "white";
                 }
             }
         }
@@ -82,6 +85,12 @@
             } else if (seconds > 29) {
                 alert("Are you sure you read the premise? Make sure you understand the situation and think deeply before chosing to press the button.");
             } else {
+
+                document.getElementById("button").src = "img/button_pressed.png";
+                setTimeout( function() { 
+                    document.getElementById("button").src = "img/button.png";
+                }, 1200);
+
                 iteration += 1;
                 next();
             }
@@ -99,7 +108,7 @@
         const CONSTRAINTS = [
         "The button is 10 feet away. You must move closer to press it.",
         "The button costs 1 quarter to press. You must pay 1 quarter to press it.",
-        "The button requires you to provide your full name verbally in order to press it.",
+        "The button requires you to provide your full name in order to press it.",
         "The button will provide you a minor electric shock when you press it.",
         "The button is up a flight of stairs. You must get up the stairs to press it.",
         "The button is behind a door. You must pay 100 dollars to get through the door.",
@@ -108,7 +117,12 @@
         "The button will kill a bunny rabbit if pressed.",
         "The button is protected by a security guard. You must pay $10,000 USD to the guard to get to the button.",
         "The button will emit radiation which will make 10 people, including you, extremely sick.",
-        "By pressing the button, you are breaking a rule which will require paying a fine of $100,000 USD.",
+        "The button requires you to provide your home address, phone number, and social security number.",
+        "The button will emit a high pitch sound leaving you deaf if you press it.",
+        "If you press the button you will have to spend 2 months in prison.",
+        "By pressing the button you are breaking a rule which will require paying a fine of $100,000 USD.",
+        "Pressing the button will save Taylor but they will be severely injured.",
+        "The button will emit a toxic chemical into the ocean.",
         "Pressing the button will only save Taylor for 5 minutes.",
         "Pressing the button will result in Alex's death.",
         ];
@@ -126,11 +140,20 @@
 
 
         function makeUL(array) {
-            var list = document.createElement('ul');
+            var list = document.createElement('p');
+            
             for (var i = 0; i < array.length; i++) {
-                var item = document.createElement('li');
+                var item = document.createElement('span');
+                var and = document.createElement('span');
+                var newLine = document.createElement('br');
                 item.appendChild(document.createTextNode(array[i]));
+                and.appendChild(document.createTextNode("and... "));
                 list.appendChild(item);
+                list.appendChild(newLine);
+
+                if (i < array.length - 1) {
+                    list.appendChild(and);
+                }
             }
             return list;
         }
